@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>영업 DB 목록 - E-Co1 대시보드</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="header-background sticky">
+        <div class="dashboard-container">
+            <header class="dashboard-header">
+                <a href="{{ url_for('dashboard') }}" class="header-title-link">
+                    <h1 class="header-title">E-Co1 업무 통합 대시보드</h1>
+                </a>
+                <div class="header-info">
+                    <span>{{ date }}</span>
+                    <span class="user-name">{{ user_name }}</span>
+                    <span class="welcome-msg">환영합니다!</span>
+                </div>
+                <div class="header-actions">
+                    <a href="{{ url_for('dashboard') }}" class="header-action-btn" aria-label="Home" data-tooltip="HOME">
+                        <i class="fas fa-home"></i>
+                    </a>
+                    <a href="#" class="header-action-btn" id="notification-btn" aria-label="Notifications" data-tooltip="NOTICE">
+                        <i class="fas fa-bell"></i>
+                    </a>
+                    
+                    <div class="dropdown">
+                        <a href="#" class="header-action-btn" aria-label="External Link">
+                            <i class="fas fa-external-link-alt"></i>
+                        </a>
+                        <div class="dropdown-content">
+                            <h4>외부링크 바로가기</h4>
+                            <a href="https://enterprise-admin.hanpda.com/login/?next=/" target="_blank">🏢 엔터프라이즈 어드민 대시보드</a>
+                            <a href="https://cmclocal.cafe24.com/admin/gmc/usr/usr_adm_loi_0.php" target="_blank">⚙️ 로컬 CMC 어드민</a>
+                            <a href="https://fas-admin.hanpda.com/" target="_blank">💰 FAS 어드민</a>
+                            <a href="https://gemini.google.com/app" target="_blank">✨ GEMINI</a>
+                            <a href="https://drive.google.com/file/d/1ReUvX0g-FnegzL9w0lyridvOVSQBEZ-g/view" target="_blank">📄 엔터프라이즈 서비스 제안서</a>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('leads_list') }}" class="header-action-btn" aria-label="Refresh" data-tooltip="REFRESH">
+                        <i class="fas fa-sync-alt"></i>
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="logout-link">[로그아웃]</a>
+                </div>
+            </header>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="dashboard-container">
+            <main class="results-main">
+                <div class="results-header">
+                    <h2><i class="fas fa-database"></i> 영업DB 현황 대시보드</h2>
+                </div>
+
+                <div class="summary-card-container">
+                    <div class="summary-card">
+                        <h4 class="summary-card-title">세일즈현황</h4>
+                        <div class="summary-card-content">
+                            <div class="summary-total">
+                                <span>TOTAL</span>
+                                <p>{{ "{:,}".format(summary_cards.sales_status.total) }}</p>
+                            </div>
+                            <table class="summary-table">
+                                <tbody>
+                                    <tr>
+                                        <td class="count-cell">
+                                            <div class="card-header-title">확정</div>
+                                            {% set query_args = request.args.to_dict() %}{% set _ = query_args.pop('card_filter_service', None) %}{% set _ = query_args.pop('card_filter_service_type', None) %}{% set _ = query_args.pop('card_filter_lead_type', None) %}{% set _ = query_args.update({'card_filter_service': '확정', 'page': 1}) %}
+                                            <a href="{{ url_for('leads_list', **query_args) }}">{{ summary_cards.sales_status.formatted_counts.get('확정', '0') }}</a>
+                                            <span class="percentage-display">({{ summary_cards.sales_status.percentages.get('확정', 0)|int }}%)</span>
+                                        </td>
+                                        <td class="count-cell">
+                                            <div class="card-header-title">영업중</div>
+                                            {% set query_args = request.args.to_dict() %}{% set _ = query_args.pop('card_filter_service', None) %}{% set _ = query_args.pop('card_filter_service_type', None) %}{% set _ = query_args.pop('card_filter_lead_type', None) %}{% set _ = query_args.update({'card_filter_service': '영업중', 'page': 1}) %}
+                                            <a href="{{ url_for('leads_list', **query_args) }}">{{ summary_cards.sales_status.formatted_counts.get('영업중', '0') }}</a>
+                                            <span class="percentage-display">({{ summary_cards.sales_status.percentages.get('영업중', 0)|int }}%)</span>
+                                        </td>
+                                        <td class="count-cell">
+                                            <div class="card-header-title">영업전</div>
+                                            {% set query_args = request.args.to_dict() %}{% set _ = query_args.pop('card_filter_service', None) %}{% set _ = query_args.pop('card_filter_service_type', None) %}{% set _ = query_args.pop('card_filter_lead_type', None) %}{% set _ = query_args.update({'card_filter_service': '영업전', 'page': 1}) %}
+                                            <a href="{{ url_for('leads_list', **query_args) }}">{{ summary_cards.sales_status.formatted_counts.get('영업전', '0') }}</a>
+                                            <span class="percentage-display">({{ summary_cards.sales_status.percentages.get('영업전', 0)|int }}%)</span>
+                                        </td>
+                                        <td class="count-cell">
+                                            <div class="card-header-title">실패</div>
+                                            {% set query_args = request.args.to_dict() %}{% set _ = query_args.pop('card_filter_service', None) %}{% set _ = query_args.pop('card_filter_service_type', None) %}{% set _ = query_args.pop('card_filter_lead_type', None) %}{% set _ = query_args.update({'card_filter_service': '실패', 'page': 1}) %}
+                                            <a href="{{ url_for('leads_list', **query_args) }}">{{ summary_cards.sales_status.formatted_counts.get('실패', '0') }}</a>
+                                            <span class="percentage-display">({{ summary_cards.sales_status.percentages.get('실패', 0)|int }}%)</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <h4 class="summary-card-title">온보딩현황</h4>
+                        <div class="summary-card-content">
+                            <div class="summary-total">
+                                <span>TOTAL</span>
+                                <p>{{ "{:,}".format(summary_cards.onboarding_status.total) }}</p>
+                            </div>
+                            <table class="summary-table">
+                                <tbody>
+                                    <tr>
+                                        <td class="count-cell">
+                                            <div class="card-header-title">소통</div>
+                                            {% set query_args = request.args.to_dict() %}{% set _ = query_args.pop('card_filter_service', None) %}{% set _ = query_args.pop('card_filter_service_type', None) %}{% set _ = query_args.pop('card_filter_lead_type', None) %}{% set _ = query_args.update({'card_filter_service_type': '소통', 'page': 1}) %}
+                                            <a href="{{ url_for('leads_list', **query_args) }}">{{ summary_cards.onboarding_status.formatted_counts.get('소통', '0') }}</a>
+                                            <span class="percentage-display">({{ summary_cards.onboarding_status.percentages.get('소통', 0)|int }}%)</span>
+                                        </td>
+                                        <td class="count-cell">
+                                            <div class="card-header-title">기능</div>
+                                            {% set query_args = request.args.to_dict() %}{% set _ = query_args.pop('card_filter_service', None) %}{% set _ = query_args.pop('card_filter_service_type', None) %}{% set _ = query_args.pop('card_filter_lead_type', None) %}{% set _ = query_args.update({'card_filter_service_type': '기능', 'page': 1}) %}
+                                            <a href="{{ url_for('leads_list', **query_args) }}">{{ summary_cards.onboarding_status.formatted_counts.get('기능', '0') }}</a>
+                                            <span class="percentage-display">({{ summary_cards.onboarding_status.percentages.get('기능', 0)|int }}%)</span>
+                                        </td>
+                                        <td class="count-cell">
+                                            <div class="card-header-title">컨설팅</div>
+                                            {% set query_args = request.args.to_dict() %}{% set _ = query_args.pop('card_filter_service', None) %}{% set _ = query_args.pop('card_filter_service_type', None) %}{% set _ = query_args.pop('card_filter_lead_type', None) %}{% set _ = query_args.update({'card_filter_service_type': '컨설팅', 'page': 1}) %}
+                                            <a href="{{ url_for('leads_list', **query_args) }}">{{ summary_cards.onboarding_status.formatted_counts.get('컨설팅', '0') }}</a>
+                                            <span class="percentage-display">({{ summary_cards.onboarding_status.percentages.get('컨설팅', 0)|int }}%)</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="summary-card summary-card-double">
+                        <h4 class="summary-card-title">리드유형</h4>
+                        <div class="summary-card-content">
+                            <div class="summary-total">
+                                <span>TOTAL</span>
+                                <p>{{ "{:,}".format(summary_cards.lead_type_status.total) }}</p>
+                            </div>
+                            <table class="summary-table lead-type-table">
+                                <tbody>
+                                    <tr>
+                                        <td class="count-cell">
+                                            <div class="card-header-title">C_고객경험강화형</div>
+                                            {% set query_args = request.args.to_dict() %}{% set _ = query_args.pop('card_filter_service', None) %}{% set _ = query_args.pop('card_filter_service_type', None) %}{% set _ = query_args.pop('card_filter_lead_type', None) %}{% set _ = query_args.pop('service', None) %}{% set _ = query_args.pop('service_type', None) %}{% set _ = query_args.update({'card_filter_lead_type': 'C_고객경험강화형', 'page': 1}) %}
+                                            <a href="{{ url_for('leads_list', **query_args) }}">{{ summary_cards.lead_type_status.formatted_counts.get('C_고객경험강화형', '0') }}</a>
+                                            <span class="percentage-display">({{ summary_cards.lead_type_status.percentages.get('C_고객경험강화형', 0)|int }}%)</span>
+                                        </td>
+                                        <td class="count-cell">
+                                            <div class="card-header-title">C_온보딩집중형</div>
+                                            {% set query_args = request.args.to_dict() %}{% set _ = query_args.pop('card_filter_service', None) %}{% set _ = query_args.pop('card_filter_service_type', None) %}{% set _ = query_args.pop('card_filter_lead_type', None) %}{% set _ = query_args.pop('service', None) %}{% set _ = query_args.pop('service_type', None) %}{% set _ = query_args.update({'card_filter_lead_type': 'C_온보딩집중형', 'page': 1}) %}
+                                            <a href="{{ url_for('leads_list', **query_args) }}">{{ summary_cards.lead_type_status.formatted_counts.get('C_온보딩집중형', '0') }}</a>
+                                            <span class="percentage-display">({{ summary_cards.lead_type_status.percentages.get('C_온보딩집중형', 0)|int }}%)</span>
+                                        </td>
+                                        <td class="count-cell">
+                                            <div class="card-header-title">O_데이터기반형</div>
+                                            {% set query_args = request.args.to_dict() %}{% set _ = query_args.pop('card_filter_service', None) %}{% set _ = query_args.pop('card_filter_service_type', None) %}{% set _ = query_args.pop('card_filter_lead_type', None) %}{% set _ = query_args.pop('service', None) %}{% set _ = query_args.pop('service_type', None) %}{% set _ = query_args.update({'card_filter_lead_type': 'O_데이터기반형', 'page': 1}) %}
+                                            <a href="{{ url_for('leads_list', **query_args) }}">{{ summary_cards.lead_type_status.formatted_counts.get('O_데이터기반형', '0') }}</a>
+                                            <span class="percentage-display">({{ summary_cards.lead_type_status.percentages.get('O_데이터기반형', 0)|int }}%)</span>
+                                        </td>
+                                        <td class="count-cell">
+                                            <div class="card-header-title">O_소통강화형</div>
+                                            {% set query_args = request.args.to_dict() %}{% set _ = query_args.pop('card_filter_service', None) %}{% set _ = query_args.pop('card_filter_service_type', None) %}{% set _ = query_args.pop('card_filter_lead_type', None) %}{% set _ = query_args.pop('service', None) %}{% set _ = query_args.pop('service_type', None) %}{% set _ = query_args.update({'card_filter_lead_type': 'O_소통강화형', 'page': 1}) %}
+                                            <a href="{{ url_for('leads_list', **query_args) }}">{{ summary_cards.lead_type_status.formatted_counts.get('O_소통강화형', '0') }}</a>
+                                            <span class="percentage-display">({{ summary_cards.lead_type_status.percentages.get('O_소통강화형', 0)|int }}%)</span>
+                                        </td>
+                                        <td class="count-cell">
+                                            <div class="card-header-title">O_자동화추구형</div>
+                                            {% set query_args = request.args.to_dict() %}{% set _ = query_args.pop('card_filter_service', None) %}{% set _ = query_args.pop('card_filter_service_type', None) %}{% set _ = query_args.pop('card_filter_lead_type', None) %}{% set _ = query_args.pop('service', None) %}{% set _ = query_args.pop('service_type', None) %}{% set _ = query_args.update({'card_filter_lead_type': 'O_자동화추구형', 'page': 1}) %}
+                                            <a href="{{ url_for('leads_list', **query_args) }}">{{ summary_cards.lead_type_status.formatted_counts.get('O_자동화추구형', '0') }}</a>
+                                            <span class="percentage-display">({{ summary_cards.lead_type_status.percentages.get('O_자동화추구형', 0)|int }}%)</span>
+                                        </td>
+                                        <td class="count-cell">
+                                            <div class="card-header-title">S_성장주도형</div>
+                                            {% set query_args = request.args.to_dict() %}{% set _ = query_args.pop('card_filter_service', None) %}{% set _ = query_args.pop('card_filter_service_type', None) %}{% set _ = query_args.pop('card_filter_lead_type', None) %}{% set _ = query_args.pop('service', None) %}{% set _ = query_args.pop('service_type', None) %}{% set _ = query_args.update({'card_filter_lead_type': 'S_성장주도형', 'page': 1}) %}
+                                            <a href="{{ url_for('leads_list', **query_args) }}">{{ summary_cards.lead_type_status.formatted_counts.get('S_성장주도형', '0') }}</a>
+                                            <span class="percentage-display">({{ summary_cards.lead_type_status.percentages.get('S_성장주도형', 0)|int }}%)</span>
+                                        </td>
+                                        <td class="count-cell">
+                                            <div class="card-header-title">S_효율최적화형</div>
+                                            {% set query_args = request.args.to_dict() %}{% set _ = query_args.pop('card_filter_service', None) %}{% set _ = query_args.pop('card_filter_service_type', None) %}{% set _ = query_args.pop('card_filter_lead_type', None) %}{% set _ = query_args.pop('service', None) %}{% set _ = query_args.pop('service_type', None) %}{% set _ = query_args.update({'card_filter_lead_type': 'S_효율최적화형', 'page': 1}) %}
+                                            <a href="{{ url_for('leads_list', **query_args) }}">{{ summary_cards.lead_type_status.formatted_counts.get('S_효율최적화형', '0') }}</a>
+                                            <span class="percentage-display">({{ summary_cards.lead_type_status.percentages.get('S_효율최적화형', 0)|int }}%)</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="search-form-container">
+                    <form action="{{ url_for('leads_list') }}" method="GET" id="search-form">
+                        <input type="hidden" name="tab" value="{{ current_tab }}">
+                        
+                        <div class="search-field">
+                            <label for="search_sorting">구분</label>
+                            <select id="search_sorting" name="sorting">
+                                <option value="">전체</option>
+                                {% for option in filter_options.sorting %}
+                                <option value="{{ option.sorting }}" {% if search_params.sorting == option.sorting %}selected{% endif %}>{{ option.sorting }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="search-field">
+                            <label for="search_label">리드구분</label>
+                            <select id="search_label" name="label">
+                                <option value="">전체</option>
+                                {% for option in filter_options.label %}
+                                <option value="{{ option.label }}" {% if search_params.label == option.label %}selected{% endif %}>{{ option.label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="search-field">
+                            <label for="search_lead_type">리드유형</label>
+                            <select id="search_lead_type" name="lead_type">
+                                <option value="">전체</option>
+                                {% for option in filter_options.lead_type %}
+                                <option value="{{ option.lead_type }}" {% if search_params.lead_type == option.lead_type %}selected{% endif %}>{{ option.lead_type }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="search-field">
+                            <label for="search_manager">담당자</label>
+                            <select id="search_manager" name="manager">
+                                <option value="">전체</option>
+                                {% for option in filter_options.manager %}
+                                <option value="{{ option.manager }}" {% if search_params.manager == option.manager %}selected{% endif %}>{{ option.manager }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="search-field">
+                            <label for="search_service">세일즈상태</label>
+                            <select id="search_service" name="service">
+                                <option value="">전체</option>
+                                {% for option in filter_options.service %}
+                                <option value="{{ option.service }}" {% if search_params.service == option.service %}selected{% endif %}>{{ option.service }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="search-field">
+                            <label for="search_service_type">세일즈유형</label>
+                            <select id="search_service_type" name="service_type">
+                                <option value="">전체</option>
+                                {% for option in filter_options.service_type %}
+                                <option value="{{ option }}" {% if search_params.service_type == option %}selected{% endif %}>{{ option }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="search-field">
+                            <label for="search_onboarding_case">온보딩정보</label>
+                            <select id="search_onboarding_case" name="onboarding_case">
+                                <option value="">전체</option>
+                                {% for option in filter_options.onboarding_case %}
+                                <option value="{{ option.onboarding_case }}" {% if search_params.onboarding_case == option.onboarding_case %}selected{% endif %}>{{ option.onboarding_case }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="search-field">
+                            <label for="search_years">운영기간</label>
+                            <select id="search_years" name="years">
+                                <option value="">전체</option>
+                                {% for option in filter_options.years %}
+                                <option value="{{ option.years }}" {% if search_params.years == option.years %}selected{% endif %}>{{ option.years }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="search-field">
+                            <label for="search_mall_id">몰아이디</label>
+                            <input type="text" id="search_mall_id" name="mall_id" value="{{ search_params.mall_id }}" placeholder="몰아이디 입력">
+                        </div>
+                        
+                        <button type="submit" class="search-btn"><i class="fas fa-search"></i> 조회</button>
+                    </form>
+                </div>
+
+                <div class="nav-tabs">
+                    {% set query_args_domestic = request.args.to_dict() %}
+                    {% set _ = query_args_domestic.update({'tab': '국내', 'page': 1}) %}
+                    <a href="{{ url_for('leads_list', **query_args_domestic) }}"
+                       class="tab-item {% if current_tab == '국내' %}active{% endif %}">국내</a>
+
+                    {% set query_args_global = request.args.to_dict() %}
+                    {% set _ = query_args_global.update({'tab': '글로벌', 'page': 1}) %}
+                    <a href="{{ url_for('leads_list', **query_args_global) }}"
+                       class="tab-item {% if current_tab == '글로벌' %}active{% endif %}">글로벌</a>
+                </div>
+
+                <div class="table-controls">
+                    <div class="total-info">
+                        총 <b>{{ total_items }}</b>건의 데이터
+                    </div>
+                    <div class="sorting-controls">
+                        <label for="sort-by">정렬 기준:</label>
+                        <select id="sort-by">
+                            <option value="default" {% if sort_by == 'default' %}selected{% endif %}>기본</option>
+                            <optgroup label="주요 지표">
+                                <option value="order_amount" {% if sort_by == 'order_amount' %}selected{% endif %}>매출액</option>
+                                <option value="all_visit" {% if sort_by == 'all_visit' %}selected{% endif %}>방문자수</option>
+                                <option value="cvr" {% if sort_by == 'cvr' %}selected{% endif %}>전환율</option>
+                                <option value="aov" {% if sort_by == 'aov' %}selected{% endif %}>객단가</option>
+                                <option value="pv" {% if sort_by == 'pv' %}selected{% endif %}>인당PV</option>
+                            </optgroup>
+                            <optgroup label="증감률">
+                                <option value="order_amount_r" {% if sort_by == 'order_amount_r' %}selected{% endif %}>매출액 증감</option>
+                                <option value="all_visit_r" {% if sort_by == 'all_visit_r' %}selected{% endif %}>방문자수 증감</option>
+                                <option value="cvr_change" {% if sort_by == 'cvr_change' %}selected{% endif %}>전환율 증감</option>
+                                <option value="aov_growth_rate" {% if sort_by == 'aov_growth_rate' %}selected{% endif %}>객단가 증감</option>
+                                <option value="page_view_r" {% if sort_by == 'page_view_r' %}selected{% endif %}>인당PV 증감</option>
+                            </optgroup>
+                        </select>
+                        <a href="#" class="sort-btn" data-order="desc" id="sort-desc"><i class="fas fa-sort-amount-down-alt"></i></a>
+                        <a href="#" class="sort-btn" data-order="asc" id="sort-asc"><i class="fas fa-sort-amount-up-alt"></i></a>
+                    </div>
+                    <div class="per-page-selector">
+                        <label for="per-page">페이지 당 개수:</label>
+                        <select id="per-page" onchange="changePerPage()">
+                            <option value="10" {% if per_page == 10 %}selected{% endif %}>10</option>
+                            <option value="20" {% if per_page == 20 %}selected{% endif %}>20</option>
+                            <option value="50" {% if per_page == 50 %}selected{% endif %}>50</option>
+                            <option value="100" {% if per_page == 100 %}selected{% endif %}>100</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    {% if leads %}
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th class="company-info-header">업체정보</th>
+                                <th>리드정보</th>
+                                <th>담당자</th>
+                                <th>세일즈정보</th>
+                                <th>온보딩정보</th>
+                                <th class="metrics-header">주요 지표</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for lead in leads %}
+                            <tr>
+                                <td class="company-info-cell">
+                                    <div class="info-wrapper">
+                                        <div class="info-left">
+                                            <span class="sorting-tag {% if lead.sorting == '국내' %}domestic{% else %}global{% endif %}">{{ lead.sorting }}</span>
+                                            <div class="info-reg-date">{{ lead.reg_date }}</div>
+                                        </div>
+                                        <div class="info-right">
+                                            <div class="info-id-line">
+                                                <span class="info-mall-id">{{ lead.mall_id }}</span>
+                                                <span class="info-shop-no">({{ lead.shop_no }})</span>
+                                                <span class="info-years-tag">{{ lead.years }}</span>
+                                            </div>
+                                            <div class="info-mall-name">
+                                                <a href="https://{{ lead.mall_id }}.cafe24.com/shop{{ lead.shop_no }}" target="_blank" rel="noopener noreferrer">{{ lead.mall_name }}</a>
+                                            </div>
+                                            <div class="info-category">{{ lead.category }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                
+                                <td class="info-cell">
+                                    <div class="info-line">
+                                        <span class="info-label">리드구분</span>
+                                        <span class="data-tag">{{ lead.label }}</span>
+                                    </div>
+                                    <div class="info-line">
+                                        <span class="info-label">리드유형</span>
+                                        <span class="data-tag">{{ lead.lead_type }}</span>
+                                    </div>
+                                </td>
+                                
+                                <td>{{ lead.manager }}</td>
+
+                                <td class="info-cell">
+                                    <div class="info-line sales-info-line">
+                                        <div class="sales-status-wrapper">
+                                            <span class="data-tag {% if lead.service == '확정' %}confirmed{% endif %}">{{ lead.service }}</span>
+                                        </div>
+                                        <div class="actions-wrapper">
+                                            <button type="button" class="action-btn" onclick='showContactModal({{ lead.mall_name | tojson }}, {{ lead.phone | tojson }}, {{ lead.email | tojson }})'>컨택정보</button>
+                                            <button type="button" class="action-btn" onclick='showMemoModal({{ lead.mall_name | tojson }}, {{ lead.memo | tojson }})'>메모</button>
+                                        </div>
+                                    </div>
+                                    <div class="info-line info-line-center">
+                                        <div class="tag-group">
+                                            {% if lead.service_type %}
+                                                {% for type in lead.service_type.split(',') %}
+                                                    {% set stripped_type = type.strip() %}
+                                                    <span class="data-tag 
+                                                        {% if stripped_type == '소통' %}comm
+                                                        {% elif stripped_type == '기능' %}feature
+                                                        {% elif stripped_type == '컨설팅' %}consulting
+                                                        {% endif %}">{{ stripped_type }}</span>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td class="info-cell">
+                                    <div class="info-line">
+                                        <span class="info-label">온보딩케이스</span>
+                                        <span class="data-tag">{{ lead.onboarding_case }}</span>
+                                    </div>
+                                    <div class="info-line">
+                                        <span class="info-label">성공일자</span>
+                                        <span class="info-date">{{ lead.confirmed_date }}</span>
+                                    </div>
+                                </td>
+
+                                <td class="metrics-cell">
+                                    <div class="metrics-wrapper">
+                                        <div class="metric-item metric-sales">
+                                            <div class="metric-label">매출액</div>
+                                            <div class="metric-value {{ lead.order_amount_r_sign }}">{{ lead.last_30_days_order_amount }}</div>
+                                            <div class="metric-growth {{ lead.order_amount_r_sign }}">
+                                                {{ lead.order_amount_r if lead.order_amount_r and lead.order_amount_r|string|trim != '' else '-' }}
+                                            </div>
+                                        </div>
+                                        <div class="metric-item metric-visitors">
+                                            <div class="metric-label">방문자수</div>
+                                            <div class="metric-value {{ lead.all_visit_r_sign }}">{{ lead.last_30_days_all_visit }}</div>
+                                            <div class="metric-growth {{ lead.all_visit_r_sign }}">
+                                                {{ lead.all_visit_r if lead.all_visit_r and lead.all_visit_r|string|trim != '' else '-' }}
+                                            </div>
+                                        </div>
+                                        <div class="metric-item metric-cvr">
+                                            <div class="metric-label">전환율</div>
+                                            <div class="metric-value {{ lead.cvr_change_sign }}">{{ lead.last_cvr }}</div>
+                                            <div class="metric-growth {{ lead.cvr_change_sign }}">
+                                                {{ lead.cvr_change if lead.cvr_change and lead.cvr_change|string|trim != '' else '-' }}
+                                            </div>
+                                        </div>
+                                        <div class="metric-item metric-aov">
+                                            <div class="metric-label">객단가</div>
+                                            <div class="metric-value {{ lead.aov_growth_rate_sign }}">{{ lead.aov }}</div>
+                                            <div class="metric-growth {{ lead.aov_growth_rate_sign }}">
+                                                {{ lead.aov_growth_rate if lead.aov_growth_rate and lead.aov_growth_rate|string|trim != '' else '-' }}
+                                            </div>
+                                        </div>
+                                        <div class="metric-item metric-pv">
+                                            <div class="metric-label">인당PV</div>
+                                            <div class="metric-value {{ lead.page_view_r_sign }}">{{ lead.last_PV }}</div>
+                                            <div class="metric-growth {{ lead.page_view_r_sign }}">
+                                                {{ lead.page_view_r if lead.page_view_r and lead.page_view_r|string|trim != '' else '-' }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p class="no-data-msg">검색 결과가 없습니다.</p>
+                    {% endif %}
+                </div>
+
+                <div class="pagination">
+                    {% if total_pages > 1 %}
+                        {% set query_args = request.args.to_dict() %}
+                        {% if current_page > 1 %}
+                            {% set page_args = query_args.copy() %}
+                            {% set _ = page_args.update({'page': current_page - 1}) %}
+                            <a href="{{ url_for('leads_list', **page_args) }}">&laquo;</a>
+                        {% else %}
+                            <span class="disabled">&laquo;</span>
+                        {% endif %}
+                        
+                        {% set page_window = 2 %}
+                        {% set start_page = [1, current_page - page_window] | max %}
+                        {% set end_page = [total_pages, current_page + page_window] | min %}
+                        
+                        {% if start_page > 1 %}
+                            {% set page_args = query_args.copy() %}
+                            {% set _ = page_args.update({'page': 1}) %}
+                            <a href="{{ url_for('leads_list', **page_args) }}">1</a>
+                            {% if start_page > 2 %}
+                                <span class="disabled">...</span>
+                            {% endif %}
+                        {% endif %}
+
+                        {% for p in range(start_page, end_page + 1) %}
+                            {% set page_args = query_args.copy() %}
+                            {% set _ = page_args.update({'page': p}) %}
+                            {% if p == current_page %}
+                                <a href="#" class="active">{{ p }}</a>
+                            {% else %}
+                                <a href="{{ url_for('leads_list', **page_args) }}">{{ p }}</a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if end_page < total_pages %}
+                            {% if end_page < total_pages - 1 %}
+                                <span class="disabled">...</span>
+                            {% endif %}
+                            {% set page_args = query_args.copy() %}
+                            {% set _ = page_args.update({'page': total_pages}) %}
+                            <a href="{{ url_for('leads_list', **page_args) }}">{{ total_pages }}</a>
+                        {% endif %}
+
+                        {% if current_page < total_pages %}
+                            {% set page_args = query_args.copy() %}
+                            {% set _ = page_args.update({'page': current_page + 1}) %}
+                            <a href="{{ url_for('leads_list', **page_args) }}">&raquo;</a>
+                        {% else %}
+                            <span class="disabled">&raquo;</span>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="info-modal" class="modal-overlay">
+        <div class="modal-content info-modal-content">
+            <span class="close-btn" onclick="closeInfoModal()">&times;</span>
+            <h3 id="info-modal-title" class="modal-title"></h3>
+            <div id="info-modal-body" class="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        // --- 페이지당 개수 변경 ---
+        function changePerPage() {
+            const perPage = document.getElementById('per-page').value;
+            const searchParams = new URLSearchParams(window.location.search);
+            searchParams.set('per_page', perPage);
+            searchParams.set('page', '1');
+            window.location.search = searchParams.toString();
+        }
+
+        // --- 모달 관련 스크립트 ---
+        const infoModal = document.getElementById('info-modal');
+        const infoModalTitle = document.getElementById('info-modal-title');
+        const infoModalBody = document.getElementById('info-modal-body');
+        const infoModalContent = infoModal.querySelector('.modal-content');
+
+        function showContactModal(mallName, phone, email) {
+            infoModalTitle.innerText = mallName;
+            infoModalBody.innerHTML = `
+                <h4 class="info-modal-subtitle">컨택 정보</h4>
+                <div class="contact-info-line"><strong>연락처:</strong> <span>${phone || '정보 없음'}</span></div>
+                <div class="contact-info-line"><strong>이메일:</strong> <span>${email || '정보 없음'}</span></div>
+            `;
+            infoModalContent.classList.remove('memo-modal');
+            infoModal.classList.add('show');
+        }
+
+        function showMemoModal(mallName, memo) {
+            infoModalTitle.innerText = mallName;
+            infoModalBody.innerHTML = `<h4 class="info-modal-subtitle">메모</h4>`;
+            
+            const memoContent = document.createElement('div');
+            memoContent.className = 'memo-content-box';
+            memoContent.innerText = memo || '작성된 메모가 없습니다.';
+            infoModalBody.appendChild(memoContent);
+            
+            infoModalContent.classList.add('memo-modal');
+            infoModal.classList.add('show');
+        }
+
+        function closeInfoModal() {
+            infoModal.classList.remove('show');
+        }
+
+        infoModal.addEventListener('click', (event) => {
+            if (event.target === infoModal) {
+                closeInfoModal();
+            }
+        });
+
+        // --- 정렬 기능 관련 스크립트 ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const sortBySelect = document.getElementById('sort-by');
+            const sortDescBtn = document.getElementById('sort-desc');
+            const sortAscBtn = document.getElementById('sort-asc');
+
+            function applySort(sortOrder) {
+                const sortBy = sortBySelect.value;
+                const searchParams = new URLSearchParams(window.location.search);
+                searchParams.set('sort_by', sortBy);
+                searchParams.set('sort_order', sortOrder);
+                searchParams.set('page', '1');
+                window.location.search = searchParams.toString();
+            }
+
+            sortBySelect.addEventListener('change', () => {
+                const currentOrder = document.querySelector('.sort-btn.active')?.dataset.order || 'desc';
+                applySort(currentOrder);
+            });
+
+            sortDescBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                applySort('desc');
+            });
+
+            sortAscBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                applySort('asc');
+            });
+
+            const currentSortOrder = '{{ sort_order }}';
+            if (currentSortOrder === 'asc') {
+                sortAscBtn.classList.add('active');
+            } else {
+                sortDescBtn.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

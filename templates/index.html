@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Co1 업무 통합 대시보드</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div id="notification-container"></div>
+    
+    <div class="header-background sticky">
+        <div class="dashboard-container">
+            <header class="dashboard-header">
+                <a href="{{ url_for('dashboard') }}" class="header-title-link">
+                    <h1 class="header-title">E-Co1 업무 통합 대시보드</h1>
+                </a>
+                <div class="header-info">
+                    <span>{{ date }}</span>
+                    <span class="user-name">{{ user_name }}</span>
+                    <span class="welcome-msg">환영합니다!</span>
+                </div>
+                <div class="header-actions">
+                    <a href="{{ url_for('dashboard') }}" class="header-action-btn" aria-label="Home" data-tooltip="HOME">
+                        <i class="fas fa-home"></i>
+                    </a>
+                    <a href="#" class="header-action-btn" id="notification-btn" aria-label="Notifications" data-tooltip="NOTICE">
+                        <i class="fas fa-bell"></i>
+                    </a>
+                    
+                    <div class="dropdown">
+                        <a href="#" class="header-action-btn" aria-label="External Link">
+                            <i class="fas fa-external-link-alt"></i>
+                        </a>
+                        <div class="dropdown-content">
+                            <h4>외부링크 바로가기</h4>
+                            <a href="https://enterprise-admin.hanpda.com/login/?next=/" target="_blank">🏢 엔터프라이즈 어드민 대시보드</a>
+                            <a href="https://cmclocal.cafe24.com/admin/gmc/usr/usr_adm_loi_0.php" target="_blank">⚙️ 로컬 CMC 어드민</a>
+                            <a href="https://fas-admin.hanpda.com/" target="_blank">💰 FAS 어드민</a>
+                            <a href="https://gemini.google.com/app" target="_blank">✨ GEMINI</a>
+                            <a href="https://drive.google.com/file/d/1ReUvX0g-FnegzL9w0lyridvOVSQBEZ-g/view" target="_blank">📄 엔터프라이즈 서비스 제안서</a>
+                        </div>
+                    </div>
+                    <a href="#" class="header-action-btn" onclick="location.reload();" aria-label="Refresh" data-tooltip="REFRESH">
+                        <i class="fas fa-sync-alt"></i>
+                    </a>
+                    <a href="{{ url_for('logout') }}" class="logout-link">[로그아웃]</a>
+                </div>
+            </header>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="dashboard-container">
+            <main class="dashboard-main">
+                {% for card in cards %}
+                <div class="card">
+                    <div class="card-icon"><i class="fas {{ card.icon }} icon-color-{{ loop.index }}"></i></div>
+                    <div class="card-body">
+                        <h2>{{ card.title }}</h2>
+                        <p class="card-description">{{ card.description }}</p>
+                        
+                        <div class="card-content-area">
+                            {% if card.id == 'company_search' %}
+                            <div class="search-wrapper">
+                                <input type="text" id="mall-id-input" placeholder="몰아이디를 입력하세요">
+                                <button id="search-btn">조회</button>
+                            </div>
+                            <div id="search-result-area" style="margin-top: 10px; font-size: 14px; white-space: pre-wrap; text-align: left;"></div>
+
+                            {# --- 수정: 영업DB 카드에 대한 분기 처리 --- #}
+                            {% elif card.id == 'sales_db' %}
+                            <div class="summary-grid">
+                                <div class="summary-item">
+                                    <span class="card-value">{{ "{:,}".format(card.total_leads) }}</span>
+                                    <p class="summary-label">누적 세일즈 리드수</p>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="card-value">{{ "{:,}".format(card.confirmed_leads) }}</span>
+                                    <p class="summary-label">누적 세일즈 성공건수</p>
+                                </div>
+                            </div>
+                            
+                            {% elif card.value %}
+                            <span class="card-value">{{ card.value }}</span>
+                            <p class="card-unit">{{ card.unit }}</p>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                    <div class="card-footer">
+                        {% if card.id == 'sales_db' %}
+                        <a href="{{ url_for('leads_list') }}">자세히 보기 &rarr;</a>
+                        {% else %}
+                        <a href="#">자세히 보기 &rarr;</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </main>
+
+            <footer class="dashboard-footer">
+                <p>&copy; 2025 엔터프라이즈 코칭1팀 업무 통합 대시보드, All rights reserved.</p>
+            </footer>
+        </div>
+    </div>
+
+    <div id="result-modal" class="modal-overlay">
+        <div class="modal-content">
+            </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
