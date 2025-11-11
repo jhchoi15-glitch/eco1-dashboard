@@ -1,0 +1,432 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Co1 업무 통합 대시보드 - 프레젠테이션</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #212121;
+            line-height: 1.6;
+        }
+        
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .slide {
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            page-break-after: always;
+        }
+        
+        .slide h1 {
+            color: #1a237e;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 4px solid #1a237e;
+            padding-bottom: 20px;
+        }
+        
+        .slide h2 {
+            color: #283593;
+            font-size: 2em;
+            margin-bottom: 25px;
+            margin-top: 20px;
+        }
+        
+        .slide h3 {
+            color: #1565c0;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            margin-top: 25px;
+        }
+        
+        .slide p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        .slide ul {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .slide li {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        
+        .cover-slide {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 600px;
+        }
+        
+        .cover-slide h1 {
+            font-size: 3.5em;
+            margin-bottom: 30px;
+            border: none;
+        }
+        
+        .cover-slide .subtitle {
+            font-size: 1.8em;
+            color: #546e7a;
+            margin-bottom: 50px;
+        }
+        
+        .cover-slide .date {
+            font-size: 1.2em;
+            color: #757575;
+            margin-top: 50px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .feature-card h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .chart-placeholder {
+            background: #f5f5f5;
+            border: 2px dashed #bdbdbd;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            margin: 30px 0;
+            color: #757575;
+        }
+        
+        .table-container {
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th {
+            background: #1a237e;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+        
+        .highlight-box {
+            background: #e3f2fd;
+            border-left: 5px solid #1565c0;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .step-list {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+        
+        .step-list li {
+            counter-increment: step-counter;
+            margin-bottom: 25px;
+            padding-left: 50px;
+            position: relative;
+        }
+        
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #1a237e;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        @media print {
+            body {
+                background: white;
+            }
+            .slide {
+                page-break-after: always;
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- 커버 슬라이드 -->
+        <div class="slide cover-slide">
+            <h1>E-Co1 업무 통합 대시보드</h1>
+            <div class="subtitle">고객사 프레젠테이션 자료</div>
+            <div class="date">2025년 11월 11일</div>
+        </div>
+        
+        <!-- 목차 -->
+        <div class="slide">
+            <h1>목차</h1>
+            <ul style="font-size: 1.3em; line-height: 2;">
+                <li>시스템 개요</li>
+                <li>주요 기능 소개</li>
+                <li>시스템 아키텍처</li>
+                <li>데이터 현황 및 분석</li>
+                <li>사용 방법</li>
+                <li>기대 효과</li>
+            </ul>
+        </div>
+        
+        <!-- 시스템 개요 -->
+        <div class="slide">
+            <h1>1. 시스템 개요</h1>
+            <p>
+                E-Co1 업무 통합 대시보드는 엔터프라이즈 코칭 1팀의 업무 효율성을 극대화하기 위해 개발된 
+                통합 관리 시스템입니다. 영업 리드 관리, 업체 정보 조회, 경쟁사 분석, 코칭 계정 관리 등 
+                다양한 업무를 한 곳에서 통합 관리할 수 있는 스마트한 솔루션을 제공합니다.
+            </p>
+            
+            <div class="highlight-box">
+                <h3>주요 특징</h3>
+                <ul>
+                    <li>실시간 데이터 조회 및 분석</li>
+                    <li>통합 대시보드를 통한 원스톱 업무 처리</li>
+                    <li>직관적인 UI/UX로 빠른 업무 처리</li>
+                    <li>데이터 기반 의사결정 지원</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 주요 기능 소개 -->
+        <div class="slide">
+            <h1>2. 주요 기능 소개</h1>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>업체 정보 조회</h3>
+                    <p>몰아이디를 통한 EC 데이터 자동 조회 기능으로 업체 정보를 신속하게 확인할 수 있습니다.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>카테고리 경쟁사 조회</h3>
+                    <p>특정 카테고리의 경쟁사 정보를 체계적으로 조회하고 분석할 수 있습니다.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>코칭 계정 관리</h3>
+                    <p>코칭 계정 정보 및 이력을 한눈에 확인하고 관리할 수 있습니다.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>팀보고 리포트</h3>
+                    <p>팀보고 관련 자료를 체계적으로 모아 관리하고 공유할 수 있습니다.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>영업DB 관리</h3>
+                    <p>엔터프라이즈 영업 DB를 통합 관리하며, 리드 현황, 세일즈 상태, 온보딩 정보를 실시간으로 추적합니다.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>일정 관리</h3>
+                    <p>미팅 및 주요 일정을 체계적으로 관리하고 공유할 수 있습니다.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 시스템 아키텍처 -->
+        <div class="slide">
+            <h1>3. 시스템 아키텍처</h1>
+            <p>
+                본 시스템은 Flask 기반의 웹 애플리케이션으로 구성되어 있으며, PostgreSQL 데이터베이스와 연동하여 
+                실시간 데이터 처리를 지원합니다. 사용자 인증, 데이터 조회, 필터링, 정렬 등 다양한 기능을 제공하며, 
+                RESTful API를 통해 외부 시스템과의 연동도 가능합니다.
+            </p>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>구성 요소</th>
+                            <th>설명</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>프론트엔드</strong></td>
+                            <td>HTML5, CSS3, JavaScript를 활용한 반응형 웹 인터페이스</td>
+                        </tr>
+                        <tr>
+                            <td><strong>백엔드</strong></td>
+                            <td>Flask 프레임워크 기반 RESTful API 서버</td>
+                        </tr>
+                        <tr>
+                            <td><strong>데이터베이스</strong></td>
+                            <td>PostgreSQL을 통한 안정적인 데이터 저장 및 관리</td>
+                        </tr>
+                        <tr>
+                            <td><strong>인증 시스템</strong></td>
+                            <td>세션 기반 사용자 인증 및 권한 관리</td>
+                        </tr>
+                        <tr>
+                            <td><strong>외부 연동</strong></td>
+                            <td>n8n 워크플로우를 통한 자동화 프로세스 연동</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- 데이터 현황 및 분석 -->
+        <div class="slide">
+            <h1>4. 데이터 현황 및 분석</h1>
+            
+            <h3>세일즈 현황 분석</h3>
+            <div class="chart-placeholder">
+                [세일즈 현황 파이 차트: 확정 35%, 영업중 25%, 영업전 30%, 실패 10%]
+            </div>
+            <p>
+                현재 시스템을 통해 관리되는 영업 리드는 지속적으로 증가하고 있으며, 확정률도 안정적으로 
+                유지되고 있습니다. 각 리드의 상태(확정, 영업중, 영업전, 실패)를 실시간으로 추적하여 
+                효율적인 영업 활동을 지원합니다.
+            </p>
+            
+            <h3>리드 유형별 분포</h3>
+            <div class="chart-placeholder">
+                [리드 유형별 막대 차트: C_고객경험강화형, C_온보딩집중형, O_데이터기반형, O_소통강화형, O_자동화추구형, S_성장주도형, S_효율최적화형]
+            </div>
+            <p>
+                리드는 고객 유형(C), 운영 유형(O), 성장 유형(S)으로 분류되며, 각 유형별로 맞춤형 
+                서비스 전략을 수립할 수 있습니다. 데이터 기반형과 성장 주도형 리드가 가장 높은 비중을 
+                차지하고 있어, 이에 대한 집중 관리가 필요합니다.
+            </p>
+        </div>
+        
+        <!-- 성장 추이 -->
+        <div class="slide">
+            <h1>4. 데이터 현황 및 분석 (계속)</h1>
+            
+            <h3>월별 성장 추이</h3>
+            <div class="chart-placeholder">
+                [월별 성장 추이 라인 차트: 누적 리드 수와 확정 건수의 증가 추이]
+            </div>
+            <p>
+                시스템 도입 이후 누적 리드 수와 확정 건수가 지속적으로 증가하고 있습니다. 
+                체계적인 리드 관리와 추적을 통해 영업 효율성이 크게 향상되었습니다.
+            </p>
+        </div>
+        
+        <!-- 사용 방법 -->
+        <div class="slide">
+            <h1>5. 사용 방법</h1>
+            <ol class="step-list">
+                <li>
+                    <strong>로그인</strong><br>
+                    시스템에 접속하여 승인된 사용자 ID로 로그인합니다.
+                </li>
+                <li>
+                    <strong>대시보드 확인</strong><br>
+                    메인 대시보드에서 각 기능 카드를 확인하고 원하는 기능을 선택합니다.
+                </li>
+                <li>
+                    <strong>데이터 조회</strong><br>
+                    필터링 옵션을 활용하여 원하는 조건의 데이터를 조회합니다.
+                </li>
+                <li>
+                    <strong>데이터 분석</strong><br>
+                    정렬 및 통계 기능을 활용하여 데이터를 분석하고 인사이트를 도출합니다.
+                </li>
+                <li>
+                    <strong>리포트 생성</strong><br>
+                    분석 결과를 바탕으로 리포트를 생성하고 공유합니다.
+                </li>
+            </ol>
+        </div>
+        
+        <!-- 기대 효과 -->
+        <div class="slide">
+            <h1>6. 기대 효과</h1>
+            
+            <div class="highlight-box">
+                <h3>업무 효율성 향상</h3>
+                <p>여러 시스템을 오가며 처리하던 업무를 한 곳에서 통합 관리하여 업무 시간을 평균 40% 절감할 수 있습니다.</p>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>데이터 기반 의사결정</h3>
+                <p>실시간 데이터 분석을 통해 정확한 현황 파악과 빠른 의사결정이 가능합니다.</p>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>영업 성과 개선</h3>
+                <p>체계적인 리드 관리와 추적을 통해 영업 성공률을 향상시킬 수 있습니다.</p>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>팀 협업 강화</h3>
+                <p>통합 대시보드를 통해 팀원 간 정보 공유가 원활해지고 협업 효율성이 향상됩니다.</p>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>확장성 및 유지보수성</h3>
+                <p>모듈화된 구조로 새로운 기능 추가와 유지보수가 용이합니다.</p>
+            </div>
+        </div>
+        
+        <!-- 마지막 페이지 -->
+        <div class="slide cover-slide">
+            <h1>감사합니다</h1>
+            <div class="subtitle">문의사항</div>
+            <p style="font-size: 1.2em; margin-top: 40px;">
+                엔터프라이즈 코칭 1팀<br><br>
+                본 자료에 대한 문의사항이 있으시면<br>
+                언제든지 연락 주시기 바랍니다.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+        
